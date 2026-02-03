@@ -29,7 +29,7 @@ async def is_port_in_use(host: str, port: int) -> bool:
 async def run_web_ui():
     global web_ui_running
     if web_ui_running:
-        print("Web UI is already running. Skipping.")
+        print("Web UI is already running. Skipping.", file=sys.stderr)
         return
 
     app = create_app()

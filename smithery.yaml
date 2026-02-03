@@ -25,8 +25,8 @@ startCommand:
         description: "Optional: Custom path for SQLite chat history database"
   
   # Standard command configuration
-  command: "perplexity-search-openclaw"
-  args: []
+  command: "python"
+  args: ["-m", "mcp_perplexity"]
   env:
     PERPLEXITY_API_KEY: "{{perplexityApiKey}}"
     PERPLEXITY_MODEL: "{{perplexityModel}}"

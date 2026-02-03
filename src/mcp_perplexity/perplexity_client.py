@@ -8,12 +8,7 @@ import httpx
 # Setup logging
 logger = logging.getLogger(__name__)
 
-# Get API key and log whether it's set (without revealing the actual key)
 PERPLEXITY_API_KEY = os.getenv("PERPLEXITY_API_KEY")
-if PERPLEXITY_API_KEY:
-    logger.info("PERPLEXITY_API_KEY is set")
-else:
-    logger.warning("PERPLEXITY_API_KEY is not set - API calls will fail with unauthorized errors")
 
 PERPLEXITY_MODEL = os.getenv("PERPLEXITY_MODEL") or "sonar-pro"
 PERPLEXITY_MODEL_ASK = os.getenv("PERPLEXITY_MODEL_ASK") or PERPLEXITY_MODEL

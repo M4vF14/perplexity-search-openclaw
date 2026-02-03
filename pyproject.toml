@@ -1,7 +1,7 @@
 [project]
-name = "mcp-perplexity"
-version = "0.5.8"
-description = "MCP Server for the Perplexity API."
+name = "perplexity-search-openclaw"
+version = "0.5.9"
+description = "Optimized Perplexity Search skill for OpenClaw. Provides ranked web results and persistent chat history specifically tuned for OpenClaw agents, including reliability guidelines to prevent system hangs during deep research."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }

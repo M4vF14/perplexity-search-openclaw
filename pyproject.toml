@@ -16,8 +16,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/daniel-lxs/mcp-perplexity"
-Repository = "https://github.com/daniel-lxs/mcp-perplexity"
+Homepage = "https://github.com/M4vF14/perplexity-search-openclaw"
+Repository = "https://github.com/M4vF14/perplexity-search-openclaw"
 
 [[project.authors]]
 name = "Daniel Riccio"

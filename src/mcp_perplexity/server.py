@@ -37,53 +37,12 @@ Your responses must:
 
 server = Server("mcp-server-perplexity")
 perplexity_client = PerplexityClient()
-db_manager = DatabaseManager(DB_PATH)
 
-
-def init_db():
-    try:
-        # Create parent directories if needed
-        db_dir = os.path.dirname(DB_PATH)
-        if db_dir:  # Only create directories if path contains them
-            os.makedirs(db_dir, exist_ok=True)
-
-        conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
-
-        # Create tables with enhanced error handling
-        c.execute('''CREATE TABLE IF NOT EXISTS chats
-                     (id TEXT PRIMARY KEY,
-                      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                      title TEXT)''')
-
-        c.execute('''CREATE TABLE IF NOT EXISTS messages
-                     (id TEXT PRIMARY KEY,
-                      chat_id TEXT,
-                      role TEXT,
-                      content TEXT,
-                      timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                      FOREIGN KEY(chat_id) REFERENCES chats(id))''')
-
-        # Verify table creation
-        c.execute(
-            "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('chats', 'messages')")
-        existing_tables = {row[0] for row in c.fetchall()}
-        if 'chats' not in existing_tables or 'messages' not in existing_tables:
-            raise RuntimeError("Failed to create database tables")
-
-        conn.commit()
-    except sqlite3.Error as e:
-        raise RuntimeError(f"Database connection error: {str(e)}")
-    except Exception as e:
-        raise RuntimeError(
-            f"Failed to initialize database at '{DB_PATH}': {str(e)}")
-    finally:
-        if 'conn' in locals():
-            conn.close()
-
-
-# Initialize database on startup
-init_db()
+try:
+    db_manager = DatabaseManager(DB_PATH)
+except Exception as e:
+    print(f"Failed to initialize database: {e}", file=sys.stderr)
+    db_manager = None
 
 
 @server.list_tools()
@@ -184,6 +143,8 @@ def generate_chat_id():
 
 
 def store_message(chat_id: str, role: str, content: str, title: Optional[str] = None) -> None:
+    if db_manager is None:
+        raise RuntimeError("Database not initialized")
     with db_manager.get_session() as session:
         # Create chat if it doesn't exist
         chat = session.query(Chat).filter(Chat.id == chat_id).first()
@@ -203,6 +164,8 @@ def store_message(chat_id: str, role: str, content: str, title: Optional[str] = 
 
 
 def get_chat_history(chat_id: str) -> List[Dict[str, str]]:
+    if db_manager is None:
+        raise RuntimeError("Database not initialized")
     with db_manager.get_session() as session:
         messages = session.query(Message).filter(
             Message.chat_id == chat_id
@@ -468,6 +431,8 @@ async def handle_call_tool(
             raise RuntimeError(f"API error: {str(e)}")
 
     elif name == "list_chats_perplexity":
+        if db_manager is None:
+            raise RuntimeError("Database not initialized")
         page = arguments.get("page", 1)
         page_size = 50
         offset = (page - 1) * page_size
@@ -505,6 +470,8 @@ async def handle_call_tool(
             return [types.TextContent(type="text", text=response_text)]
 
     elif name == "read_chat_perplexity":
+        if db_manager is None:
+            raise RuntimeError("Database not initialized")
         chat_id = arguments["chat_id"]
 
         with db_manager.get_session() as session:

@@ -1,4 +1,5 @@
 import os
+import sys
 from textwrap import dedent
 import json
 from collections import deque
@@ -556,6 +557,6 @@ async def main():
                 ),
             )
     except Exception as e:
-        print(f"Server error: {str(e)}", flush=True)
+        print(f"Server error: {str(e)}", file=sys.stderr, flush=True)
         raise
-    print("Server shutdown", flush=True)
+    print("Server shutdown", file=sys.stderr, flush=True)

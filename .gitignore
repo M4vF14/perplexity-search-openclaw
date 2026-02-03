@@ -13,4 +13,6 @@ wheels/
 .vscode/*
 !.vscode/launch.json
 !.vscode/tasks.json
-!.vscode/extensions.json
+!.vscode/extensions.jsonmcp_debug_logs/
+test_perplexity.py
+debug_mcp_server.sh

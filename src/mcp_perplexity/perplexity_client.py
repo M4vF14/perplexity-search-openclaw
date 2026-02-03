@@ -54,8 +54,6 @@ class PerplexityClient:
     def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None):
         self.api_key = api_key or PERPLEXITY_API_KEY
         self.base_url = base_url or PERPLEXITY_API_BASE_URL
-        if not self.api_key:
-            raise ValueError("Perplexity API key is required")
 
     async def _stream_completion(
         self,
@@ -72,6 +70,9 @@ class PerplexityClient:
         Yields:
             Tuple of (content_chunk, citations, usage_stats)
         """
+        if not self.api_key:
+            raise ValueError("Perplexity API key is not set. Please provide it via the PERPLEXITY_API_KEY environment variable.")
+
         model = model or PERPLEXITY_MODEL
         profile = MODEL_PROFILES.get(model, {})
         request_body = {

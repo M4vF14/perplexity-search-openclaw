@@ -2,24 +2,27 @@
 
 startCommand:
   type: stdio
-  config:
-    perplexityApiKey:
-      type: string
-      description: The API key for the Perplexity API.
-      required: true
-    perplexityModel:
-      type: string
-      description: "Optional: The model for the Perplexity API."
-      default: sonar-pro
-    modelAsk:
-      type: string
-      description: "Optional: Override model for ask_perplexity tool"
-    modelChat:
-      type: string
-      description: "Optional: Override model for chat_perplexity tool"
-    dbPath:
-      type: string
-      description: "Optional: Custom path for SQLite chat history database"
+  configSchema:
+    type: object
+    required:
+      - perplexityApiKey
+    properties:
+      perplexityApiKey:
+        type: string
+        description: The API key for the Perplexity API.
+      perplexityModel:
+        type: string
+        description: "Optional: The model for the Perplexity API."
+        default: sonar-pro
+      modelAsk:
+        type: string
+        description: "Optional: Override model for ask_perplexity tool"
+      modelChat:
+        type: string
+        description: "Optional: Override model for chat_perplexity tool"
+      dbPath:
+        type: string
+        description: "Optional: Custom path for SQLite chat history database"
   
   # Standard command configuration
   command: "perplexity-search-openclaw"

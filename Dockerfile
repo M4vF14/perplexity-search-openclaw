@@ -49,4 +49,4 @@ ENV LOG_LEVEL=INFO
 RUN useradd -m appuser && chown -R appuser /app
 USER appuser
 
-ENTRYPOINT ["mcp-perplexity"]
+ENTRYPOINT ["perplexity-search-openclaw"]

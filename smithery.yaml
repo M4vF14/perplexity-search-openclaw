@@ -27,7 +27,7 @@ startCommand:
   commandFunction:
     # A function that produces the CLI command to start the MCP on stdio.
     |-
-    (config) => ({command: 'mcp-perplexity', args: [], env: {
+    (config) => ({command: 'perplexity-search-openclaw', args: [], env: {
         PERPLEXITY_API_KEY: config.perplexityApiKey,
         PERPLEXITY_MODEL: config.perplexityModel,
         PERPLEXITY_MODEL_ASK: config.modelAsk,

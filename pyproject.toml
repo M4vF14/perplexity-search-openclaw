@@ -24,7 +24,7 @@ name = "Daniel Riccio"
 email = "ricciodaniel98@gmail.com"
 
 [project.scripts]
-mcp-perplexity = "mcp_perplexity:main"
+perplexity-search-openclaw = "mcp_perplexity:main"
 
 [build-system]
 requires = ["setuptools>=45", "wheel"]

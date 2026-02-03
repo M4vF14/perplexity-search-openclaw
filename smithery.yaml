@@ -2,38 +2,34 @@
 
 startCommand:
   type: stdio
-  configSchema:
-    # JSON Schema defining the configuration options for the MCP.
-    type: object
-    required:
-      - perplexityApiKey
-    properties:
-      perplexityApiKey:
-        type: string
-        description: The API key for the Perplexity API.
-      perplexityModel:
-        type: string
-        default: sonar-pro
-        description: "Optional: The model for the Perplexity API."
-      modelAsk:
-        type: string
-        description: "Optional: Override model for ask_perplexity tool"
-      modelChat:
-        type: string
-        description: "Optional: Override model for chat_perplexity tool"
-      dbPath:
-        type: string
-        description: "Optional: Custom path for SQLite chat history database"
-  commandFunction:
-    # A function that produces the CLI command to start the MCP on stdio.
-    |-
-    (config) => ({command: 'perplexity-search-openclaw', args: [], env: {
-        PERPLEXITY_API_KEY: config.perplexityApiKey,
-        PERPLEXITY_MODEL: config.perplexityModel,
-        PERPLEXITY_MODEL_ASK: config.modelAsk,
-        PERPLEXITY_MODEL_CHAT: config.modelChat,
-        DB_PATH: config.dbPath
-    }})
+  config:
+    perplexityApiKey:
+      type: string
+      description: The API key for the Perplexity API.
+      required: true
+    perplexityModel:
+      type: string
+      description: "Optional: The model for the Perplexity API."
+      default: sonar-pro
+    modelAsk:
+      type: string
+      description: "Optional: Override model for ask_perplexity tool"
+    modelChat:
+      type: string
+      description: "Optional: Override model for chat_perplexity tool"
+    dbPath:
+      type: string
+      description: "Optional: Custom path for SQLite chat history database"
+  
+  # Standard command configuration
+  command: "perplexity-search-openclaw"
+  args: []
+  env:
+    PERPLEXITY_API_KEY: "{{perplexityApiKey}}"
+    PERPLEXITY_MODEL: "{{perplexityModel}}"
+    PERPLEXITY_MODEL_ASK: "{{modelAsk}}"
+    PERPLEXITY_MODEL_CHAT: "{{modelChat}}"
+    DB_PATH: "{{dbPath}}"
 
 build:
   dockerfile: Dockerfile

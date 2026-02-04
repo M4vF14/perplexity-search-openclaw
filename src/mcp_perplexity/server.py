@@ -1,5 +1,7 @@
 import os
 import sys
+import asyncio
+import logging
 from textwrap import dedent
 import json
 from collections import deque
@@ -508,6 +510,18 @@ async def handle_call_tool(
 
 
 async def main():
+    # Configure logging based on DEBUG_LOGS environment variable
+    if os.getenv('DEBUG_LOGS', 'false').lower() == 'true':
+        logging.basicConfig(
+            level=logging.INFO,
+            stream=sys.stderr,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            force=True
+        )
+    else:
+        logging.getLogger().handlers = []
+        logging.getLogger().setLevel(logging.CRITICAL)
+
     try:
         async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):
             await server.run(
@@ -527,3 +541,9 @@ async def main():
         print(f"Server error: {str(e)}", file=sys.stderr, flush=True)
         raise
     print("Server shutdown", file=sys.stderr, flush=True)
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        pass

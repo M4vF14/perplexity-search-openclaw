@@ -11,6 +11,7 @@ RUN pip install uv==0.2.5 && \
 # Copy all necessary files first
 COPY pyproject.toml README.md ./
 COPY src ./src
+COPY .well-known ./.well-known
 
 # Generate lock file and install dependencies
 RUN --mount=type=cache,target=/root/.cache/uv \
@@ -26,6 +27,7 @@ WORKDIR /app
 # Copy virtual environment and source code from builder
 COPY --from=builder /app/.venv ./.venv
 COPY --from=builder /app/src ./src
+COPY --from=builder /app/.well-known ./.well-known
 
 # Ensure scripts from .venv/bin are in PATH
 ENV PATH="/app/.venv/bin:$PATH"

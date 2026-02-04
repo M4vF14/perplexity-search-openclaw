@@ -1,5 +1,7 @@
 import logging
 import os
+import json
+from pathlib import Path
 from quart import render_template, jsonify, request
 from .database_extension import db
 
@@ -84,3 +86,22 @@ def register_routes(app):
         except Exception as e:
             logger.error(f"Error deleting chat: {e}")
             return jsonify({'error': 'Failed to delete chat'}), 500
+
+    @app.route('/.well-known/mcp/server-card.json')
+    async def server_card():
+        """Serve the MCP server card for Smithery scanning"""
+        try:
+            # Get the path to the server-card.json file
+            project_root = Path(__file__).parent.parent.parent.parent
+            server_card_path = project_root / '.well-known' / 'mcp' / 'server-card.json'
+
+            if server_card_path.exists():
+                with open(server_card_path, 'r') as f:
+                    server_card_data = json.load(f)
+                return jsonify(server_card_data)
+            else:
+                logger.error(f"Server card not found at {server_card_path}")
+                return jsonify({'error': 'Server card not found'}), 404
+        except Exception as e:
+            logger.error(f"Error serving server card: {e}")
+            return jsonify({'error': 'Failed to load server card'}), 500

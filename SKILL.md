@@ -1,50 +1,129 @@
 ---
 name: perplexity-search
-description: Tools for searching the web and managing conversations via Perplexity AI. Use for expert programming assistance, research, debugging, and maintaining persistent chat history with Perplexity.
+description: Search the web using Perplexity's Search API for ranked, real-time web results with advanced filtering. Use when you need to search for current information, market research, trending topics, or when Brave Search is unavailable. Supports recency filtering (day/week/month/year) and returns structured results with titles, URLs, and snippets.
+metadata:
+  openclaw:
+    emoji: 🔍
+    requires:
+      env:
+        - PERPLEXITY_API_KEY
+    primaryEnv: PERPLEXITY_API_KEY
 ---
 
-# Perplexity Search Skill
+# Perplexity Search
 
-This skill allows you to interact with Perplexity AI for web-based research and expert Q&A.
+Search the web using Perplexity's Search API for ranked, real-time results.
 
-## Tools
+## Quick Start
 
-### ask_perplexity
-Request expert programming assistance or ask a single question.
-- **Use case:** One-off questions, coding solutions, error debugging, technical explanations.
-- **Note:** Does not maintain chat history.
+Basic search:
 
-### chat_perplexity
-Maintain an ongoing conversation with Perplexity AI.
-- **Use case:** Multi-turn conversations, research requiring context.
-- **Behavior:** Creates a new chat or continues an existing one if a `chat_id` is provided. Returns a `chat_id` for future continuation.
+```bash
+python3 {baseDir}/scripts/search.py "your search query"
+```
 
-### list_chats_perplexity
-List available chat conversations.
-- **Returns:** Chat IDs, titles, and relative creation dates.
-- **Pagination:** Returns 50 chats per page. Use `page` argument to navigate.
+With options:
 
-### read_chat_perplexity
-Retrieve the complete conversation history for a specific chat.
-- **Input:** `chat_id`
-- **Returns:** Full chat history with messages and timestamps.
-- **Note:** Local read only; does not call Perplexity API.
+```bash
+# Get 10 results
+python3 {baseDir}/scripts/search.py "AI trends 2024" --count 10
 
-## Configuration
+# Filter by recency
+python3 {baseDir}/scripts/search.py "recent AI news" --recency week
 
-The skill uses the following environment variables:
-- `PERPLEXITY_API_KEY`: Required. Your Perplexity API key.
-- `PERPLEXITY_MODEL`: Default model (e.g., `sonar-pro`).
-- `PERPLEXITY_MODEL_ASK`: Specific model for `ask_perplexity`.
-- `PERPLEXITY_MODEL_CHAT`: Specific model for `chat_perplexity`.
+# Get raw JSON output
+python3 {baseDir}/scripts/search.py "market research" --json
+```
 
-## Best Practices & Limitations
+## API Key Setup
 
-### Source Access
-This skill provides comprehensive answers with **citations (URLs)**. Perplexity has already read and synthesized these sources.
-- **Recommendation:** Rely on the summaries provided by the tool.
-- **Warning:** If you attempt to visit the cited URLs using other tools (like `web_fetch`), you may encounter **403/Access Denied** errors on major news or financial sites that block bots. The inability to scrape a citation does not invalidate the answer provided by Perplexity.
+The script requires a `PERPLEXITY_API_KEY` environment variable.
 
-### Context Management
-- Use `ask_perplexity` for distinct, unrelated queries to save context.
-- Use `chat_perplexity` only when the conversation history is relevant to the follow-up question.
+**Option 1: Set in OpenClaw config** (recommended)
+
+Add to `~/.openclaw/openclaw.json`:
+
+```json
+{
+  "skills": {
+    "perplexity-search": {
+      "env": {
+        "PERPLEXITY_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```
+
+**Option 2: Environment variable**
+
+```bash
+export PERPLEXITY_API_KEY="your-api-key-here"
+```
+
+Get your API key from: https://perplexity.ai/account/api
+
+## Parameters
+
+- `query` - Search query string (required)
+- `--count N` - Number of results (1-10, default: 5)
+- `--recency FILTER` - Recency filter: `day`, `week`, `month`, or `year`
+- `--json` - Output raw JSON instead of formatted results
+
+## Response Format
+
+The API returns:
+
+```json
+{
+  "results": [
+    {
+      "title": "Article title",
+      "url": "https://example.com/article",
+      "snippet": "Brief excerpt from the page...",
+      "date": "2024-01-15",
+      "last_updated": "2024-02-01"
+    }
+  ],
+  "id": "search-request-id"
+}
+```
+
+## Use Cases
+
+**Market Research:**
+```bash
+python3 {baseDir}/scripts/search.py "golf coaching Instagram trends" --count 10
+```
+
+**Recent News:**
+```bash
+python3 {baseDir}/scripts/search.py "AI regulation updates" --recency week
+```
+
+**Competitive Analysis:**
+```bash
+python3 {baseDir}/scripts/search.py "AI golf training apps" --count 10
+```
+
+## Pricing
+
+Perplexity Search API: **$5 per 1,000 requests**
+
+Track your usage at: https://perplexity.ai/account/api
+
+## Security
+
+- API key loaded from environment only - never hardcoded
+- Output sanitization prevents terminal injection
+- Error messages don't expose sensitive information
+- 30-second timeout prevents hanging requests
+- Input validation on all parameters
+
+## Notes
+
+- Results are ranked by relevance
+- Includes real-time web data
+- Supports filtering by recency
+- Returns structured JSON or formatted text
+- Rate limits apply based on your Perplexity plan

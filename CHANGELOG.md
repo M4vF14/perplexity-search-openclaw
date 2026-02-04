@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 
 
+## v0.5.9 (2026-02-04)
+
+### ⚡ Performance
+
+* Optimize PerplexityClient with connection pooling (reusing a single httpx.AsyncClient instance) to reduce latency and resource usage.
+
+### 🐛 Bug Fixes
+
+* Fix potential resource leak by ensuring PerplexityClient is properly closed on server shutdown.
+* Synchronize version number in `__init__.py` with `pyproject.toml`.
+
+
 ## v0.5.1 (2025-02-25)
 
 

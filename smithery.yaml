@@ -38,7 +38,7 @@ startCommand:
   
   # Standard command configuration
   command: "python"
-  args: ["-u", "-m", "mcp_perplexity.server"]
+  args: ["-u", "-m", "mcp_perplexity"]
   env:
     PERPLEXITY_API_KEY: "{{perplexityApiKey}}"
     DEBUG_LOGS: "true"

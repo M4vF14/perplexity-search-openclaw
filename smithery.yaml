@@ -1,7 +1,7 @@
 # Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
 
 startCommand:
-  type: stdio
+  type: http
   configSchema:
     type: object
     required:
@@ -23,22 +23,10 @@ startCommand:
       dbPath:
         type: string
         description: "Optional: Custom path for SQLite chat history database"
-      webUiEnabled:
-        type: boolean
-        description: "Optional: Enable web UI (required for Smithery scanning)"
-        default: true
-      webUiPort:
-        type: integer
-        description: "Optional: Web UI port"
-        default: 8050
-      webUiHost:
-        type: string
-        description: "Optional: Web UI host"
-        default: "0.0.0.0"
-  
-  # Standard command configuration
+
+  # HTTP server command configuration
   command: "python"
-  args: ["-u", "-m", "mcp_perplexity"]
+  args: ["-u", "-m", "mcp_perplexity.http_server"]
   env:
     PERPLEXITY_API_KEY: "{{perplexityApiKey}}"
     DEBUG_LOGS: "true"
@@ -46,9 +34,6 @@ startCommand:
     PERPLEXITY_MODEL_ASK: "{{modelAsk}}"
     PERPLEXITY_MODEL_CHAT: "{{modelChat}}"
     DB_PATH: "{{dbPath}}"
-    WEB_UI_ENABLED: "{{webUiEnabled}}"
-    WEB_UI_PORT: "{{webUiPort}}"
-    WEB_UI_HOST: "{{webUiHost}}"
 
 build:
   dockerfile: Dockerfile

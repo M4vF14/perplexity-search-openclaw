@@ -51,4 +51,9 @@ ENV LOG_LEVEL=INFO
 RUN useradd -m appuser && chown -R appuser /app
 USER appuser
 
-ENTRYPOINT ["perplexity-search-openclaw"]
+# Default to HTTP server for Smithery deployment
+# Set via environment: HTTP_MODE=true for HTTP, HTTP_MODE=false for STDIO
+ENV HTTP_MODE=true
+
+# Entry point script that chooses between HTTP and STDIO
+ENTRYPOINT ["sh", "-c", "if [ \"$HTTP_MODE\" = \"true\" ]; then python -u -m mcp_perplexity.http_server; else python -u -m mcp_perplexity; fi"]

@@ -9,7 +9,8 @@
   },
   "description": "Optimized Perplexity Search skill for OpenClaw. Provides ranked web results and persistent chat history specifically tuned for OpenClaw agents, including reliability guidelines to prevent system hangs during deep research.",
   "transport": {
-    "type": "stdio"
+    "type": "streamable-http",
+    "endpoint": "/mcp"
   },
   "capabilities": {
     "tools": {

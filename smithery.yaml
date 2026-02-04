@@ -30,7 +30,6 @@ startCommand:
   env:
     PERPLEXITY_API_KEY: "{{perplexityApiKey}}"
     DEBUG_LOGS: "true"
-    PYTHONPATH: "/app/src"
     PERPLEXITY_MODEL: "{{perplexityModel}}"
     PERPLEXITY_MODEL_ASK: "{{modelAsk}}"
     PERPLEXITY_MODEL_CHAT: "{{modelChat}}"

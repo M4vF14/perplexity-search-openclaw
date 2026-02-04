@@ -49,6 +49,19 @@ class PerplexityClient:
     def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None):
         self.api_key = api_key or PERPLEXITY_API_KEY
         self.base_url = base_url or PERPLEXITY_API_BASE_URL
+        self._client: Optional[httpx.AsyncClient] = None
+
+    async def get_client(self) -> httpx.AsyncClient:
+        """Get or create the AsyncClient."""
+        if self._client is None or self._client.is_closed:
+            self._client = httpx.AsyncClient(timeout=TIMEOUT)
+        return self._client
+
+    async def close(self):
+        """Close the AsyncClient if it exists."""
+        if self._client and not self._client.is_closed:
+            await self._client.aclose()
+            self._client = None
 
     async def _stream_completion(
         self,
@@ -82,16 +95,17 @@ class PerplexityClient:
                 if setting in profile:
                     request_body[setting] = profile[setting]
 
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                f"{self.base_url}/chat/completions",
-                headers={
-                    "Authorization": f"Bearer {self.api_key}",
-                    "Content-Type": "application/json",
-                },
-                json=request_body,
-                timeout=TIMEOUT,
-            )
+        client = await self.get_client()
+        
+        async with client.stream(
+            "POST",
+            f"{self.base_url}/chat/completions",
+            headers={
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json",
+            },
+            json=request_body,
+        ) as response:
             response.raise_for_status()
 
             citations = []

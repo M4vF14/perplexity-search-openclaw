@@ -10,7 +10,7 @@ from .utils import get_logs_dir
 from .server import main as server_main
 from .web import create_app, WEB_UI_ENABLED, WEB_UI_PORT, WEB_UI_HOST
 
-__version__ = "0.5.8"
+__version__ = "0.5.9"
 
 web_ui_running = False
 

@@ -540,6 +540,8 @@ async def main():
     except Exception as e:
         print(f"Server error: {str(e)}", file=sys.stderr, flush=True)
         raise
+    finally:
+        await perplexity_client.close()
     print("Server shutdown", file=sys.stderr, flush=True)
 
 if __name__ == "__main__":

@@ -29,7 +29,7 @@ startCommand:
   args: ["-u", "-m", "mcp_perplexity"]
   env:
     PERPLEXITY_API_KEY: "{{perplexityApiKey}}"
-    PYTHONPATH: "/app/src"
+    DEBUG_LOGS: "true"
     PERPLEXITY_MODEL: "{{perplexityModel}}"
     PERPLEXITY_MODEL_ASK: "{{modelAsk}}"
     PERPLEXITY_MODEL_CHAT: "{{modelChat}}"

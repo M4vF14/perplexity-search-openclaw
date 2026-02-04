@@ -110,15 +110,11 @@ def main(args: Optional[list] = None):
             # Set root logger level to CRITICAL to minimize any accidental logging
             logging.getLogger().setLevel(logging.CRITICAL)
         else:
-            # Ensure logs directory exists
-            logs_dir = get_logs_dir()
-            logs_dir.mkdir(parents=True, exist_ok=True)
-            
             # Configure root logger for debug mode
             root_logger = logging.getLogger()
             root_logger.setLevel(logging.INFO)
-            # Add file handler for general logs
-            handler = logging.FileHandler(str(logs_dir / "app.log"))
+            # Add stderr handler for general logs
+            handler = logging.StreamHandler(sys.stderr)
             handler.setFormatter(logging.Formatter(
                 '%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
             root_logger.addHandler(handler)
